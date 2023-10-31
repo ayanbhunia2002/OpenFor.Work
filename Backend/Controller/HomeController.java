@@ -5,9 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -16,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import com.OpenForWork.Entity.*;
+import com.OpenForWork.APIResponse.ApiResponse;
 import com.OpenForWork.DAO.UserRepository;
 
 
@@ -82,5 +85,64 @@ public class HomeController {
 		}
 		return "redirect:signup";
 	}
+	
+	@GetMapping("/signin")
+	public String customLogIn(Model model) {
+		model.addAttribute("title", "Log In");
+		return "login";
+	}
+	
+	@GetMapping("/find/user/{username}")
+	public String findUser(@PathVariable("username") String username,Model model) {
+		System.out.println(username);
+		User user = userRepository.findByEmail(username);
+		model.addAttribute("profile",user);
+		String skills = user.getSkills(); 
+		List<String> skillList = Arrays.asList(skills.split(","));
+		model.addAttribute("skillList", skillList);
 
+        if (user != null) {
+            Map<String, String> profileLinks = user.getProfileLinks();
+
+            String gitHubLink = profileLinks.get("GitHub");
+
+            if (gitHubLink != null) {
+     
+                model.addAttribute("gitHubLink", gitHubLink);
+                
+                String [] a = gitHubLink.split("/");
+                String github_username = a[a.length-1];
+                System.out.println("username is "+github_username);
+                
+                String apiurl = "https://api.github.com/users/"+github_username;
+                GithubUser githubuser = fetchData(apiurl);
+        		model.addAttribute("user",githubuser);
+        		model.addAttribute("username",github_username);
+            } 
+            else 
+            {
+            	System.out.println("Github link is not avaiable");
+            }
+        } else {
+            System.out.println("User not found");
+        }
+
+		return "userHome";
+	}
+	
+	private GithubUser fetchData(String apiurl) {
+		RestTemplate resttemplate = new RestTemplate();
+		ApiResponse response =resttemplate.getForObject(apiurl, ApiResponse.class);
+		if (response != null)
+		{
+			GithubUser user = new GithubUser();
+			user.setName(response.getName());
+			user.setBio(response.getBio());
+			user.setFollowers(response.getFollowers());
+			user.setPublic_repos(response.getPublic_repos());
+			System.out.println(user);
+			return user;
+		}
+		return null;
+	}
 }

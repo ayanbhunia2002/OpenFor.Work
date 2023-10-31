@@ -6,7 +6,100 @@ th:replace="base::layout(~{::section})">
 <title>User Home</title>
 </head>
 <body>
+<section>
+	<div class="container mt-4">
+    <div>
+        <div>
+            <div class="row align-items-center">
+                <div class="col-md-2">
+                  <h3><span th:text="${profile.name}"></span></h3>
+                </div>
+                <div class="col-md-2 mb-2" style="margin-left: -20px;">
+                  <img th:src="@{/img/msgbox.png}" height="23" alt="Image">
+                </div>
+                <div class="col-md-2" style="margin-top: -5px; margin-bottom:2px; margin-left: -140px;">
+                  <button class="btn btn-dark align-items-center" style="height: 22px;">
+                    <p style="margin-top: -8px;">Follow</p>
+                  </button>
+                </div>
+              </div>              
+          </div>
+          
+        <div>
+            <p style="font-size: 20px;">SWE-III @ Google</p>
+        </div>
+        <div class="my-6">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+<div class="container">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <th:block th:each="skill : ${skillList}">
+            <button type="button" class="btn btn-outline-dark">
+                <span class="d-flex align-items-center">
+                    <span class="text-capitalize" th:text="${skill}"></span>
+                </span>
+            </button>
+        </th:block>
+    </div>
+</div>
+
+              </div>
+        </div>
+        <div class="mt-3 row align-items-center">
+            <div class="col-md-2">
+                <img th:src="@{/img/location.png}" height="19" alt="Image">
+            </div>
+            <div class="col-md-2" style="margin-top: 2px;">
+                <b style="font-size: 15px; margin-left: -166px;"><span th:text="${profile.location}"></span></b>
+            </div>
+        </div>
+</div>
+<hr class="bg-dark">
+<div class="container" style="cursor: pointer;">
+    <div class="row">
+      <div class="col">
+        <div class="work" onclick="showContent('work')">
+          <!-- Content for the "Work" div -->
+          <b>WORK</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="resume" onclick="showContent('resume')">
+          <!-- Content for the "Resume" div -->
+          <b>RESUME</b>
+        </div>
+      </div>
+      <div class="col">
+        <div class="project" onclick="showContent('project')">
+          <!-- Content for the "Project" div -->
+          <b>PROJECT</b>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="contentDisplay">
+    <div class="container mt-5">
+                    <div>
+                        <img th:src="@{/img/github-logo.png}" height="20" style="margin-bottom:5px "> <b style="font-size: 20px;"> GitHub </b>
+                    </div>    
+                    <div>
+                        <b>Total Repositories <span th:text="${user.public_repos}"></span></b>
+                        <b> Total Followers <span th:text="${user.followers}"></span> </b> 
+                            
+                    </div>
+                    <div>
+    <b> <a th:href="@{'https://github.com/' + ${username} + '?tab=repositories'}" style="text-decoration: none; color: #000;">
+        View All Repo
+    </a></b>
+</div>
+
+                    <div>
+
+                    </div>    
+                  </div>
+  </div>
 	
+</section>
 
 </body>
 </html>

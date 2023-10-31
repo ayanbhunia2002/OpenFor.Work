@@ -46,3 +46,31 @@ function createProfileLink(profileName, defaultValue = "") {
     profileLinksContainer.appendChild(linkInput);
     profileLinksContainer.appendChild(lineBreak);
 }
+
+function showContent(type) {
+      var contentDisplay = document.getElementById('contentDisplay');
+      var content = '';
+  
+      if (type === 'work') {
+        content = `<div>
+                        <img th:src="@{/img/github-logo.png}" height="20" style="margin-bottom:5px "> <b style="font-size: 20px;"> GitHub </b>
+                    </div>    
+                    <div>
+                        <b>Total Repositories <span th:text="${user.public_repos}"></span></b>
+                        <b> Total Followers <span th:text="${user.followers}"></span> </b> 
+                            
+                    </div>
+                    <div>
+    <b> <a th:href="@{'https://github.com/' + ${username} + '?tab=repositories'}" style="text-decoration: none; color: #000;">
+        View All Repo
+    </a></b>
+</div>
+</div>`;
+      } else if (type === 'resume') {
+        content = `<p class="text-center mt-5 text-danger" style="font-weight: bold;">RESUME NOT YET UPLOADED</p>`
+      } else if (type === 'project') {
+        content = `<p class="text-center mt-5 text-danger" style="font-weight: bold;">PROJECTS NOT YET UPLOADED</p>`
+      }
+  
+      contentDisplay.innerHTML = content;
+    }
